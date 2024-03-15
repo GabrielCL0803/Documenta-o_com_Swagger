@@ -1,0 +1,541 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Swagger Library Manager - OpenAPI 3.0",
+        "description": "Esta é a documentação da API para gerenciamento de uma biblioteca",
+        "contact": {
+            "email": "gabriel.51905@aluno.pr.senac.br"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3333"
+        }
+    ],
+    "tags": [
+        {
+            "name": "books",
+            "description": "Gerenciamento dos livros da biblioteca"
+          },
+          {
+            "name": "loans",
+            "description": "Realize empréstimos e devoluções dos livros"
+          },
+          {
+            "name": "users",
+            "description": "Operações a respeito do usuário"
+          }
+    ],
+    "paths": {
+        "/user": {
+            "post": {
+                "tags": ["users"],
+                "summary": "Cria um novo usuário",
+                "description": "Cria um novo usuário passando suas informações básicas",
+                "requestBody": {
+                    "content": {
+                        "apllication/json": {
+                            "schema": {
+                                "items":{
+                                    "type": "#components/schemas/User"
+                                }
+                            },
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "name": "Douglas",
+                                        "email": "douglas@gmail.com",
+                                        "telefone": "41 9999-9999"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Usuário já cadastrado" 
+                    },
+                    "200": {
+                        "description": "Usuário criado com sucesso!",
+                        "content": {
+                            "apllication/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "type": "#components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "tags": ["users"],
+                "summary": "Listagem de Usuário",
+                "description": "Fazer uma lista com todos os Usuários cadastrados",
+                "requestBody":{
+                    "content":{
+                        "apllication/json":{
+                            "schema":{
+                                "items":{
+                                    "type":"string"
+                                }
+                            },
+                            "examples":{
+                                "user":["users"]
+                                }
+                            },
+                            "responses":{
+                                "400":{
+                                    "description": "Lista de Usuário está vazia"
+                                },
+                                "200":{
+                                    "description": "Lista encontrada!",
+                                    "content": {
+                                        "apllication/json": {
+                                            "schema": {
+                                                "type": "object",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+            },
+            "put":{
+                 "tags": ["users"],
+                 "summary": "Atualiza informações sobre o usuário",
+                 "description": "Atualiza nome, email e telefone",
+                 "operationId": "updateUser",
+                    "parameters": [{
+                        "name": "name, email, telefone",
+                        "in": "path",
+                        "description": "Atualiza as informações básicas",
+                        "required": true,
+                        "schema":{
+                            "type": "string"
+                        }
+                    }],
+                    "responses":{
+                        "200":{
+                            "description": "Operação realizada com sucesso!",
+                            "content":{
+                                "apllication/json":{
+                                    "schema":{
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        },
+                        "400":{
+                            "description": "Id nome de usuário invalido"
+                        },
+                        "404":{
+                            "description": "Usuário não encontrado"
+                        }
+                }      
+            },
+            "delete":{
+                "tags": ["users"],
+                  "summary": "Deletar Usuário",
+                  "description": "Deleta todas as informações do usuário",
+                  "operationId": "deleteUser",
+                  "parameters": [{
+                      "name": "name, email, telefone",
+                      "in": "path",
+                      "description": "Deleta informações sobre o Usuário",
+                      "required": true,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }],
+                  "responses": {
+                    "400": {
+                      "description": "Usuário invalido"
+                    },
+                    "404": {
+                      "description": "Usuário não encontrado no registro"
+                    }
+                  }
+                }
+              },
+        "/user/listUserById":{
+            "get":{
+                "tags": ["users"],
+                "summary": "Listagem de Usuário por Id",
+                "description": "Listar Usuário cadastrado por Id",
+                "parameters":[{
+                    "name": "id",
+                    "in": "path",
+                    "description":"Lista informações do Usuário por Id",
+                    "schema":{
+                        "type":"integer"
+                    }
+                }],
+                "responses":{
+                    "400":{
+                        "description":"Nenhum Usuário encontrado",
+                    "200":{
+                        "description": "Lista encontrada!",
+                            "content": {
+                                "apllication/json": {
+                                "schema": {
+                                    "type": "array",
+                                        "items": {
+                                        "type":"#components/schemas/User"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        "/books":{
+            "post": {
+                "tags": ["books"],
+                "summary": "Cria um novo Livro",
+                "description": "Cria um novo Livro passando suas informações básicas",
+                "requestBody": {
+                    "content": {
+                        "apllication/json": {
+                            "schema": {
+                                "items":{
+                                    "type": "#components/schemas/Book"
+                                }
+                            },
+                            "examples": {
+                                "book": {
+                                    "value": {
+                                        "author": "Machado de Assis",
+                                        "title": "Dom Casmurro",
+                                        "category": "Romance",
+                                        "pages": "346"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Livro Existente" 
+                    },
+                    "200": {
+                        "description": "Livro criado com sucesso!",
+                        "content": {
+                            "apllication/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "type": "#components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get":{
+                "tags": ["books"],
+                "summary": "Listagem de Livros",
+                "description": "Fazer uma lista com todos os Livros cadastrados",
+                "requestBody":{
+                    "content":{
+                        "apllication/json":{
+                            "schema":{
+                                "items":{
+                                    "type":"string"
+                                }
+                            },
+                            "examples":{
+                                "book":["books"]
+                                }
+                            },
+                            "responses":{
+                                "400":{
+                                    "description": "Lista de Livro está vazia"
+                                },
+                                "200":{
+                                    "description": "Lista encontrada!",
+                                    "content": {
+                                        "apllication/json": {
+                                            "schema": {
+                                                "type": "object",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+            },
+            "delete":{
+                "tags": ["books"],
+                  "summary": "Deletar Livro",
+                  "description": "Deleta todas as informações do Livro",
+                  "operationId": "deleteBook",
+                  "parameters": [{
+                      "name": "author, title, category, pages",
+                      "in": "path",
+                      "description": "Deleta informações sobre o Livro",
+                      "required": true,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }],
+                  "responses": {
+                    "400": {
+                      "description": "Livro invalido"
+                    },
+                    "404": {
+                      "description": "Livro não encontrado no registro!"
+                    }
+                  }
+                }
+        },
+        "/books/listBookById":{
+            "get":{
+                "tags": ["books"],
+                "summary": "Listagem de Livros por Id",
+                "description": "Listar Livros cadastrado por Id",
+                "parameters":[{
+                    "name": "id",
+                    "in": "query",
+                    "description":"Lista informações do Livro",
+                    "schema":{
+                        "type":"integer"
+                    }
+                }],
+                "responses":{
+                    "400":{
+                        "description":"Nenhum Livro encontrado",
+                    "200":{
+                        "description": "Lista encontrada!",
+                            "content": {
+                                "apllication/json": {
+                                "schema": {
+                                    "type": "array",
+                                        "items": {
+                                        "type":"#components/schemas/Book"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        },
+        "/loan/{idUser}/{idBook}":{
+            "post": {
+                "tags": ["loans"],
+                "summary": "Adiciona um livro a lista de emprestimo",
+                "description": "Adiciona um livro ja existente na lista de emprestimo",
+                "requestBody": {
+                    "content": {
+                        "apllication/json": {
+                            "schema": {
+                                "items":{
+                                    "type": "#components/schemas/Loan"
+                                }
+                            },
+                            "examples": {
+                                "loan": {
+                                    "value": {
+                                        "idloan": "idLoan",
+                                        "user_id": "idUser",
+                                        "book_id": "idBook"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Já houve emprestimo" 
+                    },
+                    "200": {
+                        "description": "Livro emprestado com sucesso!",
+                        "content": {
+                            "apllication/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "type": "#components/schemas/Loan"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/loan/{idUser}/listBorrowedBook":{
+            "get":{
+                "tags": ["loans"],
+                "summary": "Listagem de Empréstimo",
+                "description": "Fazer uma lista com todos os Empréstimos feitos",
+                "requestBody":{
+                    "content":{
+                        "apllication/json":{
+                            "schema":{
+                                "items":{
+                                    "type":"string"
+                                }
+                            }
+                            },
+                            "responses":{
+                                "400":{
+                                    "description": "Lista de Empréstimos está vazia"
+                                },
+                                "200":{
+                                    "description": "Lista encontrada!",
+                                    "content": {
+                                        "apllication/json": {
+                                            "schema": {
+                                                "type": "object",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+            }
+        },
+        "/loan/{user_id}":{
+            "get":{
+                "tags": ["loans"],
+                "summary": "Listagem de Total dos Empréstimos",
+                "description": "Fazer uma lista com todos os Empréstimos feitos por um Usuário",
+                "parameters":[{
+                    "name":"idUser",
+                    "in":"path",
+                    "description":" Exibe a Lista",
+                    "schema":{
+                        "type":"integer"
+                    }
+                    }],
+                    "responses":{
+                    "400":{
+                        "description": "Lista não encontrada"
+                    },
+                    "200":{
+                        "description": "Lista encontrada!",
+                        "content": {
+                            "apllication/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "#components/schemas/Loan"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                }
+
+            },
+        "/loan/{user_id}/{book_id}":{
+            "put":{
+                "tags": ["loans"],
+                "summary": "Retorna um livro",
+                "description": "Retorna um livro para a lista",
+                "operationId": "returnLoans",
+                   "parameters": [{
+                       "name": "idUser",
+                       "in": "path",
+                       "description": "Filtra os Usuários por id",
+                       "schema":{
+                        "type": "integer"
+                    }
+                   }],
+                    "responses":{
+                       "200":{
+                        "description": "Livro devolvido com sucesso!",
+                        "content":{
+                            "apllication/json":{
+                                "schema":{
+                                    "type": "#components/schemas/Loan"
+                                }
+                             }
+                        }
+                    },
+                    "400":{
+                        "description": "Empréstimo invalido!"
+                    },
+                    "404":{
+                        "description": "Usuário não encontrado!"
+                    }
+               }      
+           }
+        },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "telefone": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Book":{
+                "type":"object",
+                "properties":{
+                    "author":{
+                        "type":"string"
+                    },
+                    "title":{
+                        "type":"string"
+                    },
+                    "category":{
+                        "type":"string"
+                    },
+                    "pages":{
+                        "type":"string"
+                    }
+                }
+            },
+            "Loan":{
+                "type":"integer",
+                "properties":{
+                    "user_id":{
+                        "type":"integer"
+                },
+                    "book_id":{
+                        "type":"integer"
+                }
+                }
+            
+            }
+        }
+    }
+}
+}
